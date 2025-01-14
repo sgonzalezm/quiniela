@@ -11,7 +11,7 @@ if (!isset($_SESSION['correo'])) {
 }
 
 $id_usuario = $_SESSION['correo'];
-$id_sala = $_GET['id_sala'] ?? null; // ID de la sala desde la URL
+$id_sala = $_SESSION['id_sala'] ?? null; // ID de la sala desde la URL
 
 // Validar que se haya pasado un ID de sala
 if (is_null($id_sala)) {

@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $error = "Las contraseñas no coinciden.";
     } else {
         // Comprobar si el correo ya está registrado
-        $stmt = $conn->prepare("SELECT id FROM usuarios WHERE correo = :correo");
+        $stmt = $conn->prepare("SELECT correo FROM usuarios WHERE correo = :correo");
         $stmt->bindParam(':correo', $correo);
         $stmt->execute();
         $userExists = $stmt->fetch(PDO::FETCH_ASSOC);

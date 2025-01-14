@@ -11,7 +11,7 @@
         <div class="container">
             <h1>Quinielas en Línea</h1>
             <nav class="main-nav">
-                <a href="index.php">Inicio</a>
+                <a href="dashboard.php">Inicio</a>
                 <a href="perfil.php">Perfil</a>
                 <a href="jornadas.php">Jornadas</a>
                 <a href="tabla_posiciones.php">Tabla de Posiciones</a>

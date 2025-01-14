@@ -8,6 +8,7 @@ if (!isset($_SESSION['correo'])) {
 }
 
 $id_usuario = $_SESSION['correo'];
+$sala_default = $_SESSION['id_sala'];
 
 // Obtener la fecha actual
 $fecha_actual = date('Y-m-d');
@@ -39,17 +40,21 @@ $stmt->execute();
 $fechas_por_vencer = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Consulta para obtener los puntos acumulados por jornada
-$stmt = $conn->prepare("SELECT s.nombre_sala, e.fecha_evento, SUM(
-    CASE
-        WHEN p.prediccion_local = e.marcador_local AND p.prediccion_visitante = e.marcador_visitante THEN 3
-        WHEN (p.prediccion_local > p.prediccion_visitante AND e.marcador_local > e.marcador_visitante) OR (p.prediccion_local < p.prediccion_visitante AND e.marcador_local < e.marcador_visitante) THEN 1
-        ELSE 0
-    END) AS puntos
-FROM predicciones p
-JOIN eventos e ON p.id_evento = e.id_evento
-JOIN salas s ON e.id_sala = s.id_sala
-WHERE p.id_usuario = :id_usuario
-GROUP BY s.nombre_sala, e.fecha_evento");
+$stmt = $conn->prepare('
+    SELECT s.nombre_sala, e.fecha_evento, SUM(
+        CASE
+            WHEN p.prediccion_local = e.marcador_local AND p.prediccion_visitante = e.marcador_visitante THEN 3
+            WHEN (p.prediccion_local > p.prediccion_visitante AND e.marcador_local > e.marcador_visitante) OR (p.prediccion_local < p.prediccion_visitante AND e.marcador_local < e.marcador_visitante) THEN 1
+            ELSE 0
+        END
+    ) AS puntos
+    FROM predicciones p
+    JOIN eventos e ON p.id_evento = e.id_evento
+    JOIN salas_ligas sl ON e.id_liga = sl.id_liga
+    JOIN salas s ON sl.id_sala = s.id_sala
+    WHERE p.id_usuario = :id_usuario
+    GROUP BY s.nombre_sala, e.fecha_evento
+');
 $stmt->bindParam(':id_usuario', $id_usuario);
 $stmt->execute();
 $puntos_jornadas = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -63,6 +68,7 @@ require_once 'partials/header.php';
     <a href="predicciones.php"><button>Ingresar predicción</button></a>
     <a href="unirse_sala.php"><button>Unirte a una sala</button></a>
     <a href="crear_sala.php"><button>Agregar nueva sala</button></a>
+    <a href="gestionar_salas.php"><button>Gestionar mis salas</button></a>
 
     <h2>Salas creadas por ti</h2>
     <?php if (!empty($salas_creadas)): ?>

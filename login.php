@@ -18,10 +18,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->execute();
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+        $stmt1 = $conn->prepare("SELECT id_sala FROM salas WHERE owner_id = :correo");
+        $stmt1->bindParam(':correo', $correo);
+        $stmt1->execute();
+        $sala = $stmt1->fetch(PDO::FETCH_ASSOC);
+
         if ($user && password_verify($password, $user['password'])) {
             // Iniciar sesión
             $_SESSION['correo'] = $user['correo'];
-            $_SESSION['nombre'] = $user['nombre']; // Puedes mostrarlo en el dashboard si lo deseas.
+            $_SESSION['nombre'] = $user['nombre']; 
+            $_SESSION['id_sala'] = $sala['id_sala'];
             header('Location: dashboard.php');
             exit;
         } else {

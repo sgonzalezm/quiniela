@@ -1,6 +1,8 @@
 <?php
 // URL de la API
-$apiUrl = "https://www.thesportsdb.com/api/v1/json/3/eventsseason.php?id=4328&s=2014-2015";
+//$apiUrl = "https://www.thesportsdb.com/api/v1/json/3/eventsseason.php?id=4328&s=2024-2025";
+$apiUrl = "https://www.thesportsdb.com/api/v1/json/3/eventsround.php?id=4328&s=2024-2025";
+
 
 // Consumir la API con cURL
 $ch = curl_init();
